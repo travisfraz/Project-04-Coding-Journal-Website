@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>Travis' Coding Journal</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Journal for recording learned code">
+        <meta name="author" content="Travis Frazier">
+        <link href="styles.css" rel="stylesheet" type="text/css" />
+        <script defer src="script.js"></script>
+    </head>
+
+        
+
+    <body>
+        <div class="titleBar">
+            <span class="heading">Travis' Coding Journal</span>
+            <a class="navigation" href="index.html">Home</a>
+            <a class="navigation" href="page1.html">Page1</a>
+            <button data-modal-target="#modal" class="navigation">New Entry</a>
+        </div>
+
+
+
+
+        
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <div class="title">New Journal Entry</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <form>
+                <label for="entry-title">Entry Title:</label>
+                <input type="text" id="entry-title"><br>
+                <label for="methods-learned">Methods, properties, or Syntax Learned</label>
+                <input type="text" id="methods-learned"><br>
+                <label for="journal-entry">Journal Entry</label>
+                <input type="text" id="journal-notes"><br>
+                <button submit-entry>Submit</button>
+            </form>
+            <div class="modal-body">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Expedita repellat odit libero modi et dignissimos dolorum 
+                nihil est sit explicabo nisi blanditiis voluptatibus facilis 
+                quis perferendis, asperiores sint dolores laboriosam!
+            </div>
+        </div>
+        <div id="overlay"></div>
+<!--
+        <div class="journal-ent" id="journal-ent-1">
+            <div class="overlay"></div>
+            <div class="journal-ent-content">
+                <div class="close-button" onclick="toggleJournalEntry()">&times;</div>
+                <h1 class="journal-ent-title">Journal Entry Title</h1>
+                <div>This will be the text area of the popup window.</div>
+            </div>
+        </div>
+    -->        
+
+    </body>
+
+
+    <footer>
+
+
+    </footer>
+
+
+</html>
