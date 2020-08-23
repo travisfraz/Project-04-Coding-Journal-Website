@@ -39,11 +39,12 @@ function closeModal(modal) {
 
 
 /*This section takes new journal inputs and saves them*/
-const journalData = {};
-const submitEntryButtons = document.querySelector('[submit-entry]');
+const journalData = [];
 
 
-submitEntryButtons.addEventListener('click', () => {
+const submitEntry = (ev) => {
+
+    ev.preventDefault();
 
     let entryTitle = document.getElementById('entry-title').value;
     let methodsLeanred = document.getElementById('methods-learned').value;
@@ -55,37 +56,41 @@ submitEntryButtons.addEventListener('click', () => {
     let year = entryDate.getFullYear();
     let entryDateFormated = month.toString() + '/' + day.toString() + '/' + year.toString()
 
-    submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated);
-})
-
-
-const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
-    const numberOfEntries = Object.keys(journalData);
-    const objLength = numberOfEntries.length;
-    const newEntryKey = objLength + 1;
-
-    newObj = {
-        title: entryTitle,
-        methodsLearned: methodsLeanred,
-        notes: journalNotes,
-        entryDate: entryDateFormated
-    }
-
-    journalData[newEntryKey] = newObj;
-
-
-
-    //Testing
-    let entries = Object.entries(journalData) 
-    console.log(entries.length)
-
-    for (i=0; i < entries.length; i++) {
-        
-        console.log(entries[i])
+    if (entryTitle != '' && methodsLeanred != '' && journalNotes != '') {
+        submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated);
+        document.querySelector('form').reset();
+    } else {
+        alert('Please fill out the all fields')
     }
 }
 
 
+const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
+
+    const dataLength = journalData.length;
+
+    newObj = {
+        'title': entryTitle,
+        'methodsLearned': methodsLeanred,
+        'notes': journalNotes,
+        'entryDate': entryDateFormated
+    }
+
+    journalData[dataLength] = newObj;
+
+
+
+    //Testing
+    console.log(journalData.length)
+
+    journalData.forEach(function(entry) {
+        console.log(entry);
+    })
+}
+
+
+const submitEntryButtons = document.querySelector('[submit-entry]');
+submitEntryButtons.addEventListener('click', submitEntry)
 
 
 
