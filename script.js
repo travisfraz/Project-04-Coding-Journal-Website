@@ -20,45 +20,79 @@ overlay.addEventListener('click', () => {
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const modal = button.closest('.modal')
-        closeModal(modal)
+        const modal = button.closest('.modal');
+        closeModal(modal);
     })
 })
 
 function openModal(modal) {
-    if (modal == null) return
-    modal.classList.add('active')
-    overlay.classList.add('active')
+    if (modal == null) return;
+    modal.classList.add('active');
+    overlay.classList.add('active');
 }
 
 function closeModal(modal) {
-    if (modal == null) return
-    modal.classList.remove('active')
-    overlay.classList.remove('active')
+    if (modal == null) return;
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
 }
 
 
 /*This section takes new journal inputs and saves them*/
-const journalData = {}
-const submitEntryButtons = document.querySelector('[submit-entry]')
+const journalData = {};
+const submitEntryButtons = document.querySelector('[submit-entry]');
 
 
 submitEntryButtons.addEventListener('click', () => {
 
-    let entryTitle = document.getElementById('entry-title').value
-    let methodsLeanred = document.getElementById('methods-learned').value
-    let journalNotes = document.getElementById('journal-notes').value
+    let entryTitle = document.getElementById('entry-title').value;
+    let methodsLeanred = document.getElementById('methods-learned').value;
+    let journalNotes = document.getElementById('journal-notes').value;
 
-    let entryDate = new Date()
-    let day = entryDate.getDate()
-    let month = entryDate.getMonth() + 1
-    let year = entryDate.getFullYear()
-    let seconds = entryDate.getSeconds()
-    let entryDateFormated = month.toString() + '/' + day.toString() + '/' + year.toString() + '/' + seconds.toString()
+    let entryDate = new Date();
+    let day = entryDate.getDate();
+    let month = entryDate.getMonth() + 1;
+    let year = entryDate.getFullYear();
+    let entryDateFormated = month.toString() + '/' + day.toString() + '/' + year.toString()
 
-    submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated)
+    submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated);
 })
 
+
+const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
+    const numberOfEntries = Object.keys(journalData);
+    const objLength = numberOfEntries.length;
+    const newEntryKey = objLength + 1;
+
+    newObj = {
+        title: entryTitle,
+        methodsLearned: methodsLeanred,
+        notes: journalNotes,
+        entryDate: entryDateFormated
+    }
+
+    journalData[newEntryKey] = newObj;
+
+
+
+    //Testing
+    let entries = Object.entries(journalData) 
+    console.log(entries.length)
+
+    for (i=0; i < entries.length; i++) {
+        
+        console.log(entries[i])
+    }
+}
+
+
+
+
+
+
+
+/*  //Test code.  Trying to figure out a way to dynamically create an obj of an obj to store the entries.
+    //Using time entered as the object entry
 function submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated) {
     
     objEntry = {
@@ -66,13 +100,17 @@ function submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateF
         methods: methodsLeanred,
         content: journalNotes
     }
-
     journalData[entryDateFormated] = objEntry
-
-    console.log(Object.keys(journalData).length)
     
-    for (i=0; i < Object.keys(journalData).length; i++) {
-        console.log(journalData[i])
+
+
+
+    let entries = Object.entries(journalData) 
+    console.log(entries.length)
+
+    for (i=0; i < entries.length; i++) {
+        
+        console.log(entries[i])
     }
 
-}
+}*/
