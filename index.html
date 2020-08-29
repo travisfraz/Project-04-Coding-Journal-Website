@@ -13,12 +13,12 @@
 
         
 
-    <body>
+    <body onload="getEntries()">
         <div class="titleBar">
             <span class="heading">Travis' Coding Journal</span>
             <a class="navigation" href="index.html">Home</a>
-            <a class="navigation" href="page1.html">Page1</a>
-            <button data-modal-target="#modal" class="navigation">New Entry</a>
+            <button class="navigation" id="clear-memory" onclick="clearMemory()">Clear Memory</a>
+            <button class="navigation" data-modal-target="#modal" >New Entry</a>
         </div>
 
 

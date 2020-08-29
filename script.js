@@ -1,3 +1,23 @@
+/*This section loads the stored Journal Entries*/
+let journalData = [];
+
+function getEntries() {
+    const textEntryData = localStorage.getItem("entryData");
+    console.log(textEntryData);
+    if (textEntryData === "[object Object],[object Object]") {
+        journalData = [];
+    } else {
+        journalData = JSON.parse(textEntryData);
+    }
+}
+
+
+
+
+
+
+
+
 
 /*This section contains the modal used for journal entries*/
 const openModalButtons = document.querySelectorAll('[data-modal-target]')
@@ -38,10 +58,16 @@ function closeModal(modal) {
 }
 
 
+
+
+
+
+
+
+
+
+
 /*This section takes new journal inputs and saves them*/
-const journalData = [];
-
-
 const submitEntry = (ev) => {
 
     ev.preventDefault();
@@ -77,7 +103,7 @@ const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateF
     }
 
     journalData[dataLength] = newObj;
-
+    localStorage.setItem("entryData", JSON.stringify(journalData));
 
 
     //Testing
@@ -96,26 +122,12 @@ submitEntryButtons.addEventListener('click', submitEntry)
 
 
 
-/*  //Test code.  Trying to figure out a way to dynamically create an obj of an obj to store the entries.
-    //Using time entered as the object entry
-function submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated) {
-    
-    objEntry = {
-        title: entryTitle,
-        methods: methodsLeanred,
-        content: journalNotes
+/*This section clears ALL the previously loaded journal entries*/
+
+clearMemory = () => {
+    const confirmation = confirm("Would you like to clear ALL journal entries?");
+    if (confirmation) {
+        localStorage.clear();
+        journalData = [];
     }
-    journalData[entryDateFormated] = objEntry
-    
-
-
-
-    let entries = Object.entries(journalData) 
-    console.log(entries.length)
-
-    for (i=0; i < entries.length; i++) {
-        
-        console.log(entries[i])
-    }
-
-}*/
+}
