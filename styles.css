@@ -3,6 +3,14 @@ body {
     margin: 0;
 }
 
+
+
+
+
+
+
+
+/*styling for the navigation bar*/
 .navigation {
     background-color: bisque;
     float: right;
@@ -28,6 +36,39 @@ body {
 
 
 
+
+
+
+
+
+/*Styling for the journal enties*/
+.journal-entries {
+    background-color: rgb(253, 253, 253);
+    height: 100px;
+    margin: 10px;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 24px;
+    transition: 200ms ease-in-out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Styling for the journal entry modal box*/
 *, *::after, *::before {
     box-sizing: border-box;
 }
@@ -96,41 +137,58 @@ body {
     pointer-events: all;
 }
 
-/*
-.journal-ent .overlay {
+
+
+
+
+
+
+
+
+/*Section for the journal entry modal viewer*/
+.modal-viewer {
     position: fixed;
-    top:0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,.7);
-    z-index:1;
-    display:none
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    transition: 200ms ease-in-out;
+    background-color: white;
+    width: 500px;
+    max-width: 80%;
+    height: 250px;
+    z-index: 10;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.modal-viewer.active {
+    transform: translate(-50%, -50%) scale(1);
 }
 
 
-
-.journal-ent .close-button {
-    cursor:pointer;
-    position:absolute;
-    right:20px;
-    top:20px;
-    width:30px;
-    height:30px;
-    background:#222;
-    color:#fff;
-    font-size:25px;
-    font-weight:600;
-    line-height:30px;
-    text-align:center;
-    border-radius:50%;
-  }
-
-.journal-ent.active .overlay {
-    display: block;
+.modal-viewer-header {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
 }
 
-.journal-ent.active .content {
-    transition: all 300ms ease-in-out;
-    transform: translate(-50%,-50%) scale(1);
-}*/
+.modal-viewer-header .title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.modal-viewer-header .close-button {
+    cursor: pointer;
+    background-color: black;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.modal-viewer-body {
+    padding: 10px;
+}

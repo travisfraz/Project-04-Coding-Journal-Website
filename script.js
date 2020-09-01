@@ -4,10 +4,11 @@ let journalData = [];
 function getEntries() {
     const textEntryData = localStorage.getItem("entryData");
     console.log(textEntryData);
-    if (textEntryData === "[object Object],[object Object]") {
+    if (textEntryData === null) {
         journalData = [];
     } else {
         journalData = JSON.parse(textEntryData);
+        journalData.forEach(appendEntry);
     }
 }
 
@@ -92,9 +93,7 @@ const submitEntry = (ev) => {
 
 
 const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
-
     const dataLength = journalData.length;
-
     newObj = {
         'title': entryTitle,
         'methodsLearned': methodsLeanred,
@@ -104,19 +103,15 @@ const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateF
 
     journalData[dataLength] = newObj;
     localStorage.setItem("entryData", JSON.stringify(journalData));
-
-
-    //Testing
-    console.log(journalData.length)
-
-    journalData.forEach(function(entry) {
-        console.log(entry);
-    })
+    appendEntry(newObj);
 }
-
 
 const submitEntryButtons = document.querySelector('[submit-entry]');
 submitEntryButtons.addEventListener('click', submitEntry)
+
+
+
+
 
 
 
@@ -130,4 +125,71 @@ clearMemory = () => {
         localStorage.clear();
         journalData = [];
     }
+}
+
+
+
+
+
+
+
+
+/*This section adds journal entries to the main window*/
+
+appendEntry = (item) => {
+    let title = item.title;
+    let entryDate = item.entryDate;
+
+    let div = document.createElement("div");
+    divText = `Title: ${title} Date: ${entryDate}`
+    let node = document.createTextNode(divText);
+    div.appendChild(node);
+    div.classList.add("journal-entries");
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+    const closeModalButtons = document.querySelectorAll('[data-close-button]')
+    const overlay = document.getElementById('overlay')
+
+    
+    div.addEventListener('click', () => {
+        const modal = document.querySelector(button.dataset.modalTarget)
+        openModal(modal)
+    })
+
+
+    overlay.addEventListener('click', () => {
+        const modals = document.querySelectorAll('.modal.active')
+        modals.forEach(modal => {
+        closeModal(modal)
+        })
+    })
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            closeModal(modal);
+        })
+    })
+
+
+
+
+
+
+
+
+
+
+    let element = document.getElementById("journal-entry-area");
+    element.appendChild(div);
+    
+
 }
