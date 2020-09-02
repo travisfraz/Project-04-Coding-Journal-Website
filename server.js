@@ -1,6 +1,20 @@
-// Basic server using Node server
 
-const http = require('http');
+const express = require('express')
+const app = express()
+
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
+app.listen(3000)
+
+
+
+
+
+
+
+
+// Basic server using Node server
+/*const http = require('http');
 const fs = require('fs')
 const port = 3000
 
@@ -26,4 +40,4 @@ server.listen(port, function(error) {
     } else {
         console.log('Listenting on port ' + port);
     }
-})
+})*/
