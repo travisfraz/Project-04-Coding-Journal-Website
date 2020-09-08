@@ -8,11 +8,9 @@ function getEntries() {
         journalData = [];
     } else {
         journalData = JSON.parse(textEntryData);
-        journalData.forEach(appendEntry);
+        journalData.forEach(addEntry);
     }
 }
-
-
 
 
 
@@ -103,7 +101,7 @@ const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateF
 
     journalData[dataLength] = newObj;
     localStorage.setItem("entryData", JSON.stringify(journalData));
-    appendEntry(newObj);
+    addEntry(newObj, dataLength);
 }
 
 const submitEntryButtons = document.querySelector('[submit-entry]');
@@ -124,6 +122,10 @@ clearMemory = () => {
     if (confirmation) {
         localStorage.clear();
         journalData = [];
+        let journalEntryNode = document.getElementById("journal-entry-area");
+        while (journalEntryNode.firstChild) {
+            journalEntryNode.removeChild(journalEntryNode.lastChild);
+        }
     }
 }
 
@@ -132,64 +134,69 @@ clearMemory = () => {
 
 
 
-
-
 /*This section adds journal entries to the main window*/
 
-appendEntry = (item) => {
+addEntry = (item, index) => {
     let title = item.title;
     let entryDate = item.entryDate;
+
 
     let div = document.createElement("div");
     divText = `Title: ${title} Date: ${entryDate}`
     let node = document.createTextNode(divText);
     div.appendChild(node);
     div.classList.add("journal-entries");
+    div.dataset.modalViewerTarget = "#modal-viewer";
+    div.dataset.modalIndex = index;
 
     
-    
-    
-    
-    
-    
-    
+    let element = document.getElementById("journal-entry-area");
+    element.insertBefore(div, element.firstChild);
     
 
+    const openModalButtons = document.querySelectorAll('[data-modal-viewer-target]')
     const closeModalButtons = document.querySelectorAll('[data-close-button]')
     const overlay = document.getElementById('overlay')
 
+
+
+    openModalButtons.forEach(button => 
+        button.addEventListener('click', () => {
+            const modal = document.querySelector(button.dataset.modalViewerTarget)
+            openModalViewer(modal, index)
+        })
+    )
     
-    div.addEventListener('click', () => {
-        const modal = document.querySelector(button.dataset.modalTarget)
-        openModal(modal)
-    })
-
-
     overlay.addEventListener('click', () => {
-        const modals = document.querySelectorAll('.modal.active')
+        const modals = document.querySelectorAll('.modal-viewer.active')
         modals.forEach(modal => {
-        closeModal(modal)
+            closeModalViewer(modal)
         })
     })
 
     closeModalButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const modal = button.closest('.modal');
-            closeModal(modal);
+            const modal = button.closest('.modal-viewer');
+            closeModalViewer(modal);
         })
     })
+}
 
+function openModalViewer(modal, index) {
+    if (modal == null) return;
+    let title = journalData[index].title
+    textNode = document.createTextNode(title);
+    elementTitle = document.getElementById("modal-viewer-title");
+    elementTitle.appendChild(textNode);
+    modal.classList.add('active');
+    overlay.classList.add('active');
+}
 
+function closeModalViewer (modal) {
+    if (modal == null) return;
 
-
-
-
-
-
-
-
-    let element = document.getElementById("journal-entry-area");
-    element.appendChild(div);
-    
-
+    let elementTitle = document.getElementById("modal-viewer-title");
+    elementTitle.innerHTML = "";
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
 }
