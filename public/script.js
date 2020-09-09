@@ -9,6 +9,7 @@ function getEntries() {
     } else {
         journalData = JSON.parse(textEntryData);
         journalData.forEach(addEntry);
+        createEntryModals();
     }
 }
 
@@ -101,7 +102,9 @@ const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateF
 
     journalData[dataLength] = newObj;
     localStorage.setItem("entryData", JSON.stringify(journalData));
-    addEntry(newObj, dataLength);
+    clearEntryScreen();
+    journalData.forEach(addEntry);
+    createEntryModals();
 }
 
 const submitEntryButtons = document.querySelector('[submit-entry]');
@@ -122,14 +125,17 @@ clearMemory = () => {
     if (confirmation) {
         localStorage.clear();
         journalData = [];
-        let journalEntryNode = document.getElementById("journal-entry-area");
-        while (journalEntryNode.firstChild) {
-            journalEntryNode.removeChild(journalEntryNode.lastChild);
-        }
+        clearEntryScreen();
+        
     }
 }
 
-
+clearEntryScreen = () => {
+    let journalEntryNode = document.getElementById("journal-entry-area");
+    while (journalEntryNode.firstChild) {
+        journalEntryNode.removeChild(journalEntryNode.lastChild);
+    }
+}
 
 
 
@@ -149,24 +155,31 @@ addEntry = (item, index) => {
     div.dataset.modalViewerTarget = "#modal-viewer";
     div.dataset.modalIndex = index;
 
+
     
     let element = document.getElementById("journal-entry-area");
     element.insertBefore(div, element.firstChild);
-    
+}    
+
+
+//This section sets the entries up to be clickable and pull up the
+//modal viewer
+
+createEntryModals = () => {
 
     const openModalButtons = document.querySelectorAll('[data-modal-viewer-target]')
     const closeModalButtons = document.querySelectorAll('[data-close-button]')
     const overlay = document.getElementById('overlay')
 
 
-
-    openModalButtons.forEach(button => 
+    openModalButtons.forEach( (button, index) => 
         button.addEventListener('click', () => {
+            console.log(index);
             const modal = document.querySelector(button.dataset.modalViewerTarget)
             openModalViewer(modal, index)
         })
     )
-    
+
     overlay.addEventListener('click', () => {
         const modals = document.querySelectorAll('.modal-viewer.active')
         modals.forEach(modal => {
@@ -182,21 +195,56 @@ addEntry = (item, index) => {
     })
 }
 
+//Function to open the journal entry modal viewer and add the relevant
+//data for that journal entry
+
 function openModalViewer(modal, index) {
     if (modal == null) return;
-    let title = journalData[index].title
-    textNode = document.createTextNode(title);
+
+    entryPosition = journalData.length - index - 1;
+    let title = journalData[entryPosition].title;
+    let entryDate = journalData[entryPosition].entryDate;
+    let methodsLearned = journalData[entryPosition].methodsLearned;
+    let notes = journalData[entryPosition].notes;
+
+    titleTextNode = document.createTextNode(title);
     elementTitle = document.getElementById("modal-viewer-title");
-    elementTitle.appendChild(textNode);
+    elementTitle.appendChild(titleTextNode);
+
+    dateTextNode = document.createTextNode(entryDate);
+    elementDate = document.getElementById("modal-viewer-date");
+    elementDate.appendChild(dateTextNode);
+
+    methodsTextNode = document.createTextNode(methodsLearned);
+    elementMethods = document.getElementById("modal-viewer-methods");
+    elementMethods.appendChild(methodsTextNode);
+
+    notesTextNode = document.createTextNode(notes);
+    elementNotes = document.getElementById("modal-viewer-notes");
+    elementNotes.appendChild(notesTextNode);
+
     modal.classList.add('active');
     overlay.classList.add('active');
 }
+
+//Function to close the journal entry modal viewer and remove the relevant
+//data for that journal entry
 
 function closeModalViewer (modal) {
     if (modal == null) return;
 
     let elementTitle = document.getElementById("modal-viewer-title");
     elementTitle.innerHTML = "";
+
+    let elementDate = document.getElementById("modal-viewer-date");
+    elementDate.innerHTML = "";
+
+    let elementMethods = document.getElementById("modal-viewer-methods");
+    elementMethods.innerHTML = "";
+
+    let elementNotes = document.getElementById("modal-viewer-notes");
+    elementNotes.innerHTML = "";
+
     modal.classList.remove('active');
     overlay.classList.remove('active');
 }
