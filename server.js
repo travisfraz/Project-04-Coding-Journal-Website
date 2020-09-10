@@ -1,43 +1,31 @@
 
-const express = require('express')
-const app = express()
+const express = require('express');
+const Datastore = require('nedb');
 
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-app.listen(process.env.PORT || 3000)
+const app = express();
 
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.json({ limit: '1mb'}));
+app.listen(process.env.PORT || 3000);
 
+const database = new Datastore('journal_entries.db');
+database.loadDatabase();
 
+app.post('/api/saveEntries', (request, response) => {
+    const journalData = request.body;
+    database.insert(journalData);
+    response.json({ status: 'Success!'});
+})
 
-
-
-
-
-// Basic server using Node server
-/*const http = require('http');
-const fs = require('fs')
-const port = 3000
-
-const server = http.createServer(function(req, res) {
-    res.writeHead(200, { 'Content-type': 'text/html' })
-    fs.readFile('index.html', function(error, data) {
-        if (error) {
-            res.writeHead(404);
-            res.write('Error: File not found');
-        } else {
-            res.write(data);
-        }
-        res.end();
+app.get('/api/loadEntries', (request, response) => {
+    database.find({}, (err, docs) => {
+        response.json(docs); 
     })
+    
+})
 
 
-});
 
 
-server.listen(port, function(error) {
-    if (error) {
-        console.log('Something went wrong', error);
-    } else {
-        console.log('Listenting on port ' + port);
-    }
-})*/
+

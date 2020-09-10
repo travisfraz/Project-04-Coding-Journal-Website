@@ -1,13 +1,14 @@
 /*This section loads the stored Journal Entries*/
 let journalData = [];
 
-function getEntries() {
-    const textEntryData = localStorage.getItem("entryData");
-    console.log(textEntryData);
-    if (textEntryData === null) {
+async function getEntries() {
+
+    const response = await fetch('/api/loadEntries');
+    const journalData = await response.json();
+
+    if (journalData === null) {
         journalData = [];
     } else {
-        journalData = JSON.parse(textEntryData);
         journalData.forEach(addEntry);
         createEntryModals();
     }
@@ -91,14 +92,25 @@ const submitEntry = (ev) => {
 }
 
 
-const submitJournalEntry = (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
+const submitJournalEntry = async (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
     const dataLength = journalData.length;
-    newObj = {
+    const newObj = {
         'title': entryTitle,
         'methodsLearned': methodsLeanred,
         'notes': journalNotes,
         'entryDate': entryDateFormated
     }
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newObj)
+    }
+
+    const response = await fetch('/api/saveEntries', options);
+    const json = await response.json();
+    console.log(json);
 
     journalData[dataLength] = newObj;
     localStorage.setItem("entryData", JSON.stringify(journalData));
@@ -202,6 +214,7 @@ function openModalViewer(modal, index) {
     if (modal == null) return;
 
     entryPosition = journalData.length - index - 1;
+    console.log(journalData);
     let title = journalData[entryPosition].title;
     let entryDate = journalData[entryPosition].entryDate;
     let methodsLearned = journalData[entryPosition].methodsLearned;
