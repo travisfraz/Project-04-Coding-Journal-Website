@@ -25,6 +25,14 @@ app.get('/api/loadEntries', (request, response) => {
     
 })
 
+app.post('/api/getEntry', (request, response) => {
+    const id = request.body
+    console.log(id)
+    database.findOne({ _id: id.id}, (err, docs) => {
+        response.json(docs);
+    })
+})
+
 
 
 

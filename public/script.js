@@ -1,6 +1,4 @@
 /*This section loads the stored Journal Entries*/
-let journalData = [];
-
 async function getEntries() {
 
     const response = await fetch('/api/loadEntries');
@@ -9,7 +7,8 @@ async function getEntries() {
     if (journalData === null) {
         journalData = [];
     } else {
-        journalData.forEach(addEntry);
+        clearEntryScreen();
+        journalData.forEach(loadEntries);
         createEntryModals();
     }
 }
@@ -93,7 +92,7 @@ const submitEntry = (ev) => {
 
 
 const submitJournalEntry = async (entryTitle, methodsLeanred, journalNotes, entryDateFormated) => {
-    const dataLength = journalData.length;
+
     const newObj = {
         'title': entryTitle,
         'methodsLearned': methodsLeanred,
@@ -112,11 +111,7 @@ const submitJournalEntry = async (entryTitle, methodsLeanred, journalNotes, entr
     const json = await response.json();
     console.log(json);
 
-    journalData[dataLength] = newObj;
-    localStorage.setItem("entryData", JSON.stringify(journalData));
-    clearEntryScreen();
-    journalData.forEach(addEntry);
-    createEntryModals();
+    getEntries();
 }
 
 const submitEntryButtons = document.querySelector('[submit-entry]');
@@ -154,21 +149,23 @@ clearEntryScreen = () => {
 
 /*This section adds journal entries to the main window*/
 
-addEntry = (item, index) => {
-    let title = item.title;
-    let entryDate = item.entryDate;
+const loadEntries = (journalData) => {
+    
+    let title = journalData.title;
+    let entryDate = journalData.entryDate;
+    let id = journalData._id;
 
 
     let div = document.createElement("div");
     divText = `Title: ${title} Date: ${entryDate}`
     let node = document.createTextNode(divText);
     div.appendChild(node);
+
     div.classList.add("journal-entries");
     div.dataset.modalViewerTarget = "#modal-viewer";
-    div.dataset.modalIndex = index;
+    console.log(id);
+    div.dataset.modalIndex = id;
 
-
-    
     let element = document.getElementById("journal-entry-area");
     element.insertBefore(div, element.firstChild);
 }    
@@ -177,18 +174,18 @@ addEntry = (item, index) => {
 //This section sets the entries up to be clickable and pull up the
 //modal viewer
 
-createEntryModals = () => {
+const createEntryModals = () => {
 
     const openModalButtons = document.querySelectorAll('[data-modal-viewer-target]')
     const closeModalButtons = document.querySelectorAll('[data-close-button]')
     const overlay = document.getElementById('overlay')
 
 
-    openModalButtons.forEach( (button, index) => 
+    openModalButtons.forEach( (button) => 
         button.addEventListener('click', () => {
-            console.log(index);
             const modal = document.querySelector(button.dataset.modalViewerTarget)
-            openModalViewer(modal, index)
+            const id = button.getAttribute("data-modal-index");
+            openModalViewer(modal, id)
         })
     )
 
@@ -210,15 +207,25 @@ createEntryModals = () => {
 //Function to open the journal entry modal viewer and add the relevant
 //data for that journal entry
 
-function openModalViewer(modal, index) {
+async function openModalViewer(modal, id) {
     if (modal == null) return;
 
-    entryPosition = journalData.length - index - 1;
-    console.log(journalData);
-    let title = journalData[entryPosition].title;
-    let entryDate = journalData[entryPosition].entryDate;
-    let methodsLearned = journalData[entryPosition].methodsLearned;
-    let notes = journalData[entryPosition].notes;
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: id})
+    }
+    console.log(id);
+    const response = await fetch('/api/getEntry', options);
+    const journalEntry = await response.json();
+
+    console.log(journalEntry);
+    let title = journalEntry.title;
+    let entryDate = journalEntry.entryDate;
+    let methodsLearned = journalEntry.methodsLearned;
+    let notes = journalEntry.notes;
 
     titleTextNode = document.createTextNode(title);
     elementTitle = document.getElementById("modal-viewer-title");
