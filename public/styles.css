@@ -230,8 +230,15 @@ form {
 
 .modal-viewer-body {
     padding: 10px;
+    height: 100%;
 }
 
-#modal-entry {
-    transform: scale(0);
-}
+    .modal-viewer-body div {
+        padding:4px;
+    }
+
+    .modal-viewer-body button {
+        padding: 4px;
+        width: 100%;
+        vertical-align: bottom;
+    }
