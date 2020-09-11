@@ -21,18 +21,28 @@ app.post('/api/saveEntries', (request, response) => {
 app.get('/api/loadEntries', (request, response) => {
     database.find({}, (err, docs) => {
         response.json(docs); 
+        console.log(docs);
     })
-    
 })
 
 app.post('/api/getEntry', (request, response) => {
     const id = request.body
-    console.log(id)
     database.findOne({ _id: id.id}, (err, docs) => {
         response.json(docs);
     })
 })
 
+
+
+
+
+
+
+app.post('/api/deleteEntry', (request, response) => {
+    entryId = request.body;
+    database.remove({ _id: entryId.id }, {}, function (err, numRemoved) {});
+    response.json(true);
+})
 
 
 

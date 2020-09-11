@@ -7,6 +7,20 @@ async function getEntries() {
     if (journalData === null) {
         journalData = [];
     } else {
+
+        journalData.sort((a,b) => {
+            const nameA = a.entryDate.toUpperCase();
+            const nameB = b.entryDate.toUpperCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        })
+
+        console.log(journalData);
         clearEntryScreen();
         journalData.forEach(loadEntries);
         createEntryModals();
@@ -23,6 +37,7 @@ async function getEntries() {
 const openModalButtons = document.querySelectorAll('[data-modal-target]')
 const closeModalButtons = document.querySelectorAll('[data-close-button]')
 const overlay = document.getElementById('overlay')
+console.log(overlay)
 
 openModalButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -83,7 +98,7 @@ const submitEntry = (ev) => {
     let entryDateFormated = month.toString() + '/' + day.toString() + '/' + year.toString()
 
     if (entryTitle != '' && methodsLeanred != '' && journalNotes != '') {
-        submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDateFormated);
+        submitJournalEntry(entryTitle, methodsLeanred, journalNotes, entryDate);
         document.querySelector('form').reset();
     } else {
         alert('Please fill out the all fields')
@@ -127,16 +142,6 @@ submitEntryButtons.addEventListener('click', submitEntry)
 
 /*This section clears ALL the previously loaded journal entries*/
 
-clearMemory = () => {
-    const confirmation = confirm("Would you like to clear ALL journal entries?");
-    if (confirmation) {
-        localStorage.clear();
-        journalData = [];
-        clearEntryScreen();
-        
-    }
-}
-
 clearEntryScreen = () => {
     let journalEntryNode = document.getElementById("journal-entry-area");
     while (journalEntryNode.firstChild) {
@@ -151,19 +156,27 @@ clearEntryScreen = () => {
 
 const loadEntries = (journalData) => {
     
-    let title = journalData.title;
-    let entryDate = journalData.entryDate;
-    let id = journalData._id;
+    const title = journalData.title;
+    const entryDate = journalData.entryDate;
+    const entryDateFormated = formatDate(entryDate)
+    const id = journalData._id;
 
+    
 
-    let div = document.createElement("div");
-    divText = `Title: ${title} Date: ${entryDate}`
-    let node = document.createTextNode(divText);
-    div.appendChild(node);
+    const spanOne = document.createElement("span");
+    spanOne.className = "journal-entry-headers"
+    spanOne.textContent = `Title: ${title}`
+
+    const spanTwo = document.createElement("span");
+    spanTwo.className = "journal-entry-headers"
+    spanTwo.textContent = `Date: ${entryDateFormated}`
+
+    const div = document.createElement("div")
+    div.appendChild(spanOne)
+    div.appendChild(spanTwo)
 
     div.classList.add("journal-entries");
     div.dataset.modalViewerTarget = "#modal-viewer";
-    console.log(id);
     div.dataset.modalIndex = id;
 
     let element = document.getElementById("journal-entry-area");
@@ -217,13 +230,13 @@ async function openModalViewer(modal, id) {
         },
         body: JSON.stringify({id: id})
     }
-    console.log(id);
+
     const response = await fetch('/api/getEntry', options);
     const journalEntry = await response.json();
 
-    console.log(journalEntry);
     let title = journalEntry.title;
     let entryDate = journalEntry.entryDate;
+    const entryDateFormated = formatDate(entryDate) 
     let methodsLearned = journalEntry.methodsLearned;
     let notes = journalEntry.notes;
 
@@ -231,7 +244,7 @@ async function openModalViewer(modal, id) {
     elementTitle = document.getElementById("modal-viewer-title");
     elementTitle.appendChild(titleTextNode);
 
-    dateTextNode = document.createTextNode(entryDate);
+    dateTextNode = document.createTextNode(entryDateFormated);
     elementDate = document.getElementById("modal-viewer-date");
     elementDate.appendChild(dateTextNode);
 
@@ -242,6 +255,9 @@ async function openModalViewer(modal, id) {
     notesTextNode = document.createTextNode(notes);
     elementNotes = document.getElementById("modal-viewer-notes");
     elementNotes.appendChild(notesTextNode);
+
+    modal = document.getElementById("modal-viewer");
+    modal.dataset.entryId = id;
 
     modal.classList.add('active');
     overlay.classList.add('active');
@@ -267,4 +283,55 @@ function closeModalViewer (modal) {
 
     modal.classList.remove('active');
     overlay.classList.remove('active');
+}
+
+
+
+
+//This section will setup an entry for deletion
+
+const deleteEntry = async () => {
+
+    const execute = confirm("Do you want to delete this entry?")
+    console.log(execute);
+    if (execute) {
+
+        const modal = document.getElementById("modal-viewer")
+        const entryId = modal.getAttribute("data-entry-id")
+
+        console.log(entryId);
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: entryId})
+        }
+
+        const response = await fetch('/api/deleteEntry', options);
+        const condition = await response.json();
+
+        if (condition) {
+            getEntries();
+        }
+        else {
+            alert("Unsuccessful");
+        }
+    }
+    else {
+        return
+    }
+} 
+
+const deleteEntryButton = document.querySelector('[delete-entry]');
+deleteEntryButton.addEventListener('click', deleteEntry)
+
+
+//Function to format date entries for the user
+const formatDate = (isoDate) => {
+    let tempDate = new Date(isoDate)
+    tempDate = tempDate.toDateString()
+    const entryDateFormated = tempDate.substr(tempDate.indexOf(" ") + 1)
+    return entryDateFormated
 }

@@ -13,15 +13,18 @@
 
         
 
-    <body onload="getEntries()">
+    <header>
         <div class="titleBar">
             <span class="heading">Travis' Coding Journal</span>
-            <a class="navigation" href="index.html">Home</a>
-            <button class="navigation" id="clear-memory" onclick="clearMemory()">Clear Memory</a>
+            <a class="navigation" href="index.html">Untagged</a>
+            <button class="navigation">Untagged</a>
             <button class="navigation" data-modal-target="#modal" >New Entry</a>
         </div>
+    </header>
 
+    <body onload="getEntries()">
         <div id="journal-entry-area"></div>
+        <img href="tiger.jpg" class="background-img"/>
 
 
 
@@ -35,13 +38,13 @@
                 <button data-close-button class="close-button">&times;</button>
             </div>
             <form>
-                <label for="entry-title">Entry Title:</label>
+                <label for="entry-title">Entry Title: </label>
                 <input type="text" id="entry-title"><br>
-                <label for="methods-learned">Methods, properties, or Syntax Learned</label>
+                <label for="methods-learned">Syntax Learned: </label>
                 <input type="text" id="methods-learned"><br>
-                <label for="journal-entry">Journal Entry</label>
-                <input type="text" id="journal-notes"><br>
-                <button submit-entry>Submit</button>
+                <label for="journal-notes">Journal Entry: </label>
+                <textarea name="journal-notes" id="journal-notes" maxlength="5000"></textarea><br>
+                <input type="submit" submit-entry/>
             </form>
         </div>
 
@@ -50,14 +53,15 @@
 
 <!--Modal used to view a journal entry-->
 
-        <div class="modal-viewer" id="modal-viewer">
+        <div class="modal-viewer" id="modal-viewer" data-entry-id>
             <div class="modal-viewer-header">
-                <div class="title">Journal Entry Title:<span id="modal-viewer-title"></span></div>
+                <div class="title">Journal Entry: <span id="modal-viewer-title"></span></div>
                 <button data-close-button class="close-button">&times;</button>
             </div>
-            <div>Date Entered:<span id="modal-viewer-date"></span></div>
-            <div>Methods Learned:<span id="modal-viewer-methods"></span></div>
-            <div>Journal Entry Notes:<span id="modal-viewer-notes"></span></div>
+            <div>Date Entered: <span id="modal-viewer-date"></span></div>
+            <div>Methods Learned: <span id="modal-viewer-methods"></span></div>
+            <div>Journal Entry Notes: <span id="modal-viewer-notes"></span></div>
+            <button delete-entry>Delete Entry</button>
         </div>
 
 
