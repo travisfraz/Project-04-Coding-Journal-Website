@@ -238,7 +238,12 @@ form {
     }
 
     .modal-viewer-body button {
-        padding: 4px;
         width: 100%;
-        vertical-align: bottom;
+        background-color: #555555;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }

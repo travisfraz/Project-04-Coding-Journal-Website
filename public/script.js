@@ -20,7 +20,6 @@ async function getEntries() {
             return 0;
         })
 
-        console.log(journalData);
         clearEntryScreen();
         journalData.forEach(loadEntries);
         createEntryModals();
@@ -37,7 +36,6 @@ async function getEntries() {
 const openModalButtons = document.querySelectorAll('[data-modal-target]')
 const closeModalButtons = document.querySelectorAll('[data-close-button]')
 const overlay = document.getElementById('overlay')
-console.log(overlay)
 
 openModalButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -121,10 +119,8 @@ const submitJournalEntry = async (entryTitle, methodsLeanred, journalNotes, entr
         },
         body: JSON.stringify(newObj)
     }
-
     const response = await fetch('/api/saveEntries', options);
     const json = await response.json();
-    console.log(json);
 
     getEntries();
 }
@@ -234,11 +230,11 @@ async function openModalViewer(modal, id) {
     const response = await fetch('/api/getEntry', options);
     const journalEntry = await response.json();
 
-    let title = journalEntry.title;
-    let entryDate = journalEntry.entryDate;
+    let title = journalEntry[0].title;
+    let entryDate = journalEntry[0].entryDate;
     const entryDateFormated = formatDate(entryDate) 
-    let methodsLearned = journalEntry.methodsLearned;
-    let notes = journalEntry.notes;
+    let methodsLearned = journalEntry[0].methodsLearned;
+    let notes = journalEntry[0].notes;
 
     titleTextNode = document.createTextNode(title);
     elementTitle = document.getElementById("modal-viewer-title");
@@ -293,13 +289,11 @@ function closeModalViewer (modal) {
 const deleteEntry = async () => {
 
     const execute = confirm("Do you want to delete this entry?")
-    console.log(execute);
+
     if (execute) {
 
         const modal = document.getElementById("modal-viewer")
         const entryId = modal.getAttribute("data-entry-id")
-
-        console.log(entryId);
 
         const options = {
             method: 'POST',
@@ -314,6 +308,7 @@ const deleteEntry = async () => {
 
         if (condition) {
             getEntries();
+            closeModalViewer(modal)
         }
         else {
             alert("Unsuccessful");
