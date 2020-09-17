@@ -1,5 +1,5 @@
 //Configuration statement for any enviroment variables (just database location at this time 9/17/20)
-if (process.env.DATABASE_URL !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
