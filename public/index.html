@@ -16,9 +16,15 @@
     <header>
         <div class="titleBar">
             <span class="heading">Travis' Coding Journal</span>
-            <a class="navigation" href="index.html">Untagged</a>
-            <button class="navigation">Untagged</a>
-            <button class="navigation" data-modal-target="#modal" >New Entry</a>
+            <button class="navigation" data-modal-target="#modal" >New Entry</button>
+            <!--<form  id="search-form" action="index.js/api/find"> 
+                <div class="navigation" id="search-div"> 
+                    <input placeholder=" Search Courses"
+                        name="search"> 
+                    <button type="submit">Submit</button> 
+                </div>
+            </form> -->
+            </div>
         </div>
     </header>
 
@@ -61,7 +67,7 @@
             <div class="modal-viewer-body">
                 <div>Date Entered: <span id="modal-viewer-date"></span></div>
                 <div>Methods Learned: <span id="modal-viewer-methods"></span></div>
-                <div>Journal Entry Notes: <span id="modal-viewer-notes"></span></div>
+                <div id="modal-viewer-text">Journal Entry Notes: <span id="modal-viewer-notes"></span></div>
                 <button id="delete-entry" delete-entry>Delete Entry</button>
             </div>
         </div>
