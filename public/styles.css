@@ -219,6 +219,8 @@ form {
 
 /*Section for the journal entry modal viewer*/
 .modal-viewer {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -265,7 +267,7 @@ form {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    height: 85%;
+    height: 70%;
 }
 
     .modal-viewer-body div {
